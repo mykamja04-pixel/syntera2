@@ -5,123 +5,920 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Synthera – 판매실적 보고서</title>
 <style>
-:root{--bg:#f3f5f7;--sf:#fff;--ink:#14202b;--mute:#5b6b79;--line:#d5dce2;--ac:#0b5c6b;--acink:#fff;--hl:#dff1f0;--err:#c0392b}
-@media(prefers-color-scheme:dark){:root{--bg:#0f1820;--sf:#16222d;--ink:#e8eef2;--mute:#93a4b2;--line:#2a3a48;--ac:#4fc1c9;--acink:#06222a;--hl:#1b3a40;--err:#ff8a7a}}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 "Malgun Gothic","Apple SD Gothic Neo","Noto Sans KR",system-ui,sans-serif}
-.w{max-width:960px;margin:0 auto;padding:24px 20px 70px}
-h1{margin:0;font-size:28px;letter-spacing:-.01em}.sub{color:var(--mute);margin:2px 0 22px}
-section{background:var(--sf);border:1px solid var(--line);border-radius:6px;padding:20px;margin-bottom:20px}
-h2{font-size:17px;margin:0 0 14px}h3{font-size:15px;margin:20px 0 8px}
-label{display:grid;gap:4px;font-size:14px;color:var(--mute);margin-bottom:12px}
-input,select,textarea,button{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:8px;min-width:0}
-textarea{resize:vertical;min-height:64px}
-.row{display:flex;gap:12px;flex-wrap:wrap}.row>label{flex:1;min-width:150px}
-button{cursor:pointer}
-button.p{background:var(--ac);color:var(--acink);border-color:var(--ac);font-weight:600;padding:10px 18px}
-button:disabled{opacity:.5;cursor:wait}
-button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px solid var(--ac)}
-.msg{margin:10px 0 0;font-size:14px;color:var(--mute)}.err{color:var(--err)}
-.note{font-size:13px;color:var(--mute);margin:0 0 12px}
-.tw{overflow-x:auto;margin-bottom:8px}
-table{border-collapse:collapse;width:100%;min-width:560px}
-th,td{border:1px solid var(--line);padding:4px}
-th{background:var(--hl);font-size:14px}
-td input,th input{width:100%;border:0;background:transparent;padding:6px}
-td.x,th.x{width:40px;text-align:center}
-td button,th button{padding:2px 8px}
-.li{display:flex;gap:6px;align-items:flex-start;margin-bottom:8px}
-.li textarea{flex:1;min-height:52px}.li button{padding:6px 9px}
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin:12px 0}.card{border:1px solid var(--line);border-radius:6px;padding:10px 12px;background:var(--bg)}.card b{display:block;font-size:20px;line-height:1.4}.card span{font-size:13px;color:var(--mute)}
-.dl{display:flex;gap:12px;flex-wrap:wrap;margin-top:6px}
-[hidden]{display:none!important}
-.tabs{display:flex;gap:8px;margin:0 0 20px}.tabs button{padding:10px 18px;font-weight:600;background:var(--sf)}.tabs button[aria-selected=true]{background:var(--ac);color:var(--acink);border-color:var(--ac)}
+/* ─── Reset & Root ──────────────────────────────────────── */
+:root {
+  --bg: #f0f4f8;
+  --bg2: #e8edf3;
+  --sf: #ffffff;
+  --ink: #1a2535;
+  --ink2: #3d5068;
+  --mute: #6b7c93;
+  --line: #d0d9e4;
+  --ac: #0b5c6b;
+  --ac-light: #0e7a8f;
+  --acink: #ffffff;
+  --hl: #e0f2f5;
+  --hl2: #b8e8ee;
+  --err: #c0392b;
+  --warn: #d9822b;
+  --success: #1e7b4b;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.05);
+  --shadow: 0 4px 16px rgba(0,0,0,.10), 0 2px 6px rgba(0,0,0,.06);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,.12), 0 4px 12px rgba(0,0,0,.08);
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0d1621;
+    --bg2: #111d2b;
+    --sf: #16222f;
+    --ink: #e4edf6;
+    --ink2: #a8bfcf;
+    --mute: #7a94a8;
+    --line: #263545;
+    --ac: #3dbfcc;
+    --ac-light: #55d0dc;
+    --acink: #052028;
+    --hl: #163340;
+    --hl2: #1d4555;
+    --err: #ff8a7a;
+    --warn: #f5a55a;
+    --success: #52d9a0;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,.25);
+    --shadow: 0 4px 16px rgba(0,0,0,.35);
+    --shadow-lg: 0 8px 32px rgba(0,0,0,.4);
+  }
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font: 15px/1.65 "Pretendard", "Malgun Gothic", "Apple SD Gothic Neo", "Noto Sans KR", system-ui, sans-serif;
+  min-height: 100vh;
+}
+
+/* ─── Layout ────────────────────────────────────────────── */
+.app-shell { display: flex; min-height: 100vh; }
+
+/* Sidebar */
+.sidebar {
+  width: 240px;
+  flex-shrink: 0;
+  background: var(--sf);
+  border-right: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-sm);
+}
+.sidebar-logo {
+  padding: 24px 20px 20px;
+  border-bottom: 1px solid var(--line);
+}
+.sidebar-logo .brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.brand-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--ac), var(--ac-light));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 900;
+  letter-spacing: -1px;
+  flex-shrink: 0;
+}
+.brand-name {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--ac);
+  letter-spacing: -.03em;
+}
+.brand-sub {
+  font-size: 11px;
+  color: var(--mute);
+  margin-top: 1px;
+}
+.sidebar-nav {
+  flex: 1;
+  padding: 12px 10px;
+}
+.nav-section {
+  margin-bottom: 4px;
+}
+.nav-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--mute);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  padding: 8px 10px 4px;
+}
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+  border-radius: var(--radius-sm);
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--ink2);
+  cursor: pointer;
+  transition: all .15s;
+  text-decoration: none;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+}
+.nav-item:hover {
+  background: var(--hl);
+  color: var(--ac);
+}
+.nav-item.active {
+  background: var(--hl);
+  color: var(--ac);
+  font-weight: 700;
+}
+.nav-icon { font-size: 16px; width: 20px; text-align: center; }
+.sidebar-footer {
+  padding: 14px 20px;
+  border-top: 1px solid var(--line);
+  font-size: 11px;
+  color: var(--mute);
+}
+
+/* Main content */
+.main-content {
+  flex: 1;
+  overflow-x: hidden;
+  min-width: 0;
+}
+
+/* Top header */
+.top-header {
+  background: var(--sf);
+  border-bottom: 1px solid var(--line);
+  padding: 0 32px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  box-shadow: var(--shadow-sm);
+}
+.top-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.top-subtitle {
+  font-size: 12px;
+  color: var(--mute);
+  margin-top: 1px;
+}
+.header-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.content-body {
+  padding: 28px 32px 80px;
+  max-width: 980px;
+}
+
+/* ─── Cards & Sections ──────────────────────────────────── */
+.card {
+  background: var(--sf);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow .2s;
+}
+.card:hover { box-shadow: var(--shadow); }
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--line);
+}
+.card-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--hl);
+  color: var(--ac);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.card-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.card-subtitle {
+  font-size: 12px;
+  color: var(--mute);
+  margin-top: 2px;
+}
+.step-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--ac);
+  color: var(--acink);
+  font-size: 11px;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.section-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--mute);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  margin: 20px 0 10px;
+}
+.section-title:first-child { margin-top: 0; }
+
+/* ─── Form elements ─────────────────────────────────────── */
+.field-group {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+  margin-bottom: 4px;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.field label, label.field-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--mute);
+  letter-spacing: .02em;
+}
+input, select, textarea {
+  font: inherit;
+  font-size: 14px;
+  color: var(--ink);
+  background: var(--bg);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 9px 12px;
+  min-width: 0;
+  transition: border-color .15s, box-shadow .15s;
+  width: 100%;
+}
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--ac);
+  box-shadow: 0 0 0 3px rgba(11,92,107,.12);
+}
+input::placeholder { color: var(--mute); opacity: .7; }
+textarea { resize: vertical; min-height: 80px; }
+select { cursor: pointer; }
+
+/* Row layout (legacy compat) */
+.row {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.row > label {
+  flex: 1;
+  min-width: 160px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--mute);
+  margin-bottom: 0;
+}
+.row > label input,
+.row > label select,
+.row > label textarea {
+  margin-top: 0;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--mute);
+  margin-bottom: 12px;
+}
+
+/* ─── Buttons ───────────────────────────────────────────── */
+button {
+  cursor: pointer;
+  font: inherit;
+  font-size: 13.5px;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--line);
+  background: var(--bg);
+  color: var(--ink2);
+  padding: 8px 14px;
+  transition: all .15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+button:hover {
+  background: var(--hl);
+  border-color: var(--hl2);
+  color: var(--ac);
+}
+button:active { transform: scale(.98); }
+button:disabled { opacity: .45; cursor: wait; }
+button:focus-visible { outline: 2px solid var(--ac); outline-offset: 2px; }
+
+/* Primary button */
+button.p, .btn-primary {
+  background: linear-gradient(135deg, var(--ac), var(--ac-light));
+  color: var(--acink);
+  border-color: transparent;
+  font-weight: 700;
+  padding: 10px 18px;
+  box-shadow: 0 2px 8px rgba(11,92,107,.25);
+}
+button.p:hover, .btn-primary:hover {
+  filter: brightness(1.08);
+  color: var(--acink);
+}
+
+/* Icon button */
+.btn-icon {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  border-radius: 7px;
+}
+
+/* ─── Download button group ─────────────────────────────── */
+.dl {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+.dl button.p {
+  padding: 10px 16px;
+  font-size: 13px;
+}
+
+/* ─── Status messages ───────────────────────────────────── */
+.msg {
+  margin: 10px 0 0;
+  font-size: 13px;
+  color: var(--mute);
+  padding: 0;
+  min-height: 0;
+}
+.msg:not(:empty) {
+  background: var(--hl);
+  border: 1px solid var(--hl2);
+  border-radius: var(--radius-sm);
+  padding: 9px 12px;
+  color: var(--ac);
+  font-weight: 600;
+}
+.msg.err {
+  background: rgba(192,57,43,.08);
+  border-color: var(--err);
+  color: var(--err);
+}
+.note {
+  font-size: 12.5px;
+  color: var(--mute);
+  line-height: 1.6;
+  margin-bottom: 14px;
+  padding: 10px 14px;
+  background: var(--bg2);
+  border-radius: var(--radius-sm);
+  border-left: 3px solid var(--line);
+}
+
+/* ─── Tables ────────────────────────────────────────────── */
+.tw { overflow-x: auto; border-radius: var(--radius-sm); margin-bottom: 10px; }
+table {
+  border-collapse: collapse;
+  width: 100%;
+  min-width: 560px;
+  font-size: 13.5px;
+}
+th, td {
+  border: 1px solid var(--line);
+  padding: 0;
+}
+th {
+  background: var(--hl);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ac);
+  letter-spacing: .02em;
+  text-align: center;
+  padding: 8px 10px;
+}
+td { padding: 2px 4px; }
+td input, th input {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  padding: 7px 10px;
+  border-radius: 0;
+  box-shadow: none;
+}
+td input:focus, th input:focus {
+  background: var(--hl);
+  border-radius: 0;
+  box-shadow: inset 0 0 0 2px var(--ac);
+}
+td.x, th.x { width: 36px; text-align: center; }
+td button, th button {
+  padding: 3px 8px;
+  font-size: 12px;
+}
+tbody tr:hover td { background: var(--hl); }
+
+/* ─── KPI Cards ─────────────────────────────────────────── */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin: 14px 0;
+}
+/* JS dynamically creates .card inside .cards */
+.cards .card, .card-kpi {
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius);
+  padding: 16px;
+  background: var(--sf);
+  position: relative;
+  overflow: hidden;
+  transition: box-shadow .2s;
+  box-shadow: var(--shadow-sm);
+}
+.cards .card::before, .card-kpi::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 4px; height: 100%;
+  background: linear-gradient(180deg, var(--ac), var(--ac-light));
+  border-radius: 4px 0 0 4px;
+}
+.cards .card:hover, .card-kpi:hover { box-shadow: var(--shadow); }
+.cards .card span, .card-kpi span { font-size: 12px; color: var(--mute); display: block; }
+.cards .card b, .card-kpi b { display: block; font-size: 22px; font-weight: 800; color: var(--ac); line-height: 1.3; margin: 4px 0; }
+.cards .card small, .card-kpi small { font-size: 11.5px; color: var(--mute); }
+
+/* ─── List items ────────────────────────────────────────── */
+.li {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+.li textarea {
+  flex: 1;
+  min-height: 56px;
+  font-size: 13.5px;
+}
+.li button { padding: 7px 10px; font-size: 13px; }
+
+/* ─── Tab bar ───────────────────────────────────────────── */
+.tabs {
+  display: flex;
+  gap: 6px;
+  margin: 0 0 20px;
+  background: var(--bg2);
+  padding: 5px;
+  border-radius: var(--radius);
+  width: fit-content;
+}
+.tabs button {
+  padding: 8px 18px;
+  font-weight: 600;
+  font-size: 13.5px;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--mute);
+  transition: all .15s;
+}
+.tabs button[aria-selected="true"] {
+  background: var(--sf);
+  color: var(--ac);
+  box-shadow: var(--shadow-sm);
+}
+.tabs button:hover:not([aria-selected="true"]) {
+  color: var(--ink);
+  background: rgba(255,255,255,.4);
+}
+
+/* ─── Canvas chart ──────────────────────────────────────── */
+#cv {
+  display: none;
+  width: 100%;
+  border-radius: var(--radius);
+  border: 1.5px solid var(--line);
+  margin-top: 12px;
+  box-shadow: var(--shadow-sm);
+}
+
+/* ─── File upload ───────────────────────────────────────── */
+.file-upload-area {
+  border: 2px dashed var(--line);
+  border-radius: var(--radius);
+  padding: 20px;
+  text-align: center;
+  transition: all .2s;
+  cursor: pointer;
+  background: var(--bg2);
+}
+.file-upload-area:hover {
+  border-color: var(--ac);
+  background: var(--hl);
+}
+.file-upload-area input[type="file"] {
+  display: block;
+  width: 100%;
+  background: transparent;
+  border: none;
+  text-align: center;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--mute);
+  padding: 4px;
+  box-shadow: none;
+}
+.file-upload-label {
+  font-size: 13px;
+  color: var(--mute);
+  margin-bottom: 8px;
+}
+.file-upload-icon { font-size: 28px; margin-bottom: 6px; color: var(--ac); }
+
+/* ─── Section hidden ────────────────────────────────────── */
+[hidden] { display: none !important; }
+
+/* ─── Summary bar ───────────────────────────────────────── */
+.d-sum-bar {
+  background: var(--hl);
+  border: 1px solid var(--hl2);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  font-size: 13px;
+  color: var(--ac);
+  font-weight: 600;
+  margin-bottom: 14px;
+}
+
+/* ─── Divider ───────────────────────────────────────────── */
+.divider {
+  height: 1px;
+  background: var(--line);
+  margin: 24px 0;
+}
+
+/* ─── Subhead ───────────────────────────────────────────── */
+h3.subhead {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink2);
+  margin: 20px 0 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+h3.subhead::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+
+/* ─── Info text ─────────────────────────────────────────── */
+.info-text {
+  font-size: 12px;
+  color: var(--mute);
+  margin: 6px 0 2px;
+  padding-left: 2px;
+}
+
+/* ─── Mobile ────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .sidebar { display: none; }
+  .content-body { padding: 20px 16px 60px; }
+  .top-header { padding: 0 16px; }
+  .cards { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+}
 </style>
 </head>
 <body>
-<div class="w">
-<h1>Synthera</h1>
-<p class="sub">판매실적 보고서 · 내용을 직접 입력하거나 Excel을 불러와 정리하고, Word·Excel·PowerPoint 파일로 저장하고, 저장한 보고서는 다시 불러올 수 있습니다.</p>
+<div class="app-shell">
 
-<section>
-<h2>1. 보고서 정보</h2>
-<div class="row">
-<label>회사/부서<input id="company" placeholder="예: 영업1팀"></label>
-<label>보고 기간<input id="period" placeholder="예: 2026년 3분기"></label>
-<label>작성자<input id="author"></label>
-</div>
-<p class="msg" id="m1" role="status"></p>
-</section>
+  <!-- ── Sidebar ── -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="brand">
+        <div class="brand-icon">S</div>
+        <div>
+          <div class="brand-name">Synthera</div>
+          <div class="brand-sub">판매실적 보고서</div>
+        </div>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section">
+        <div class="nav-label">보고서</div>
+        <a class="nav-item active" href="#sec-info">
+          <span class="nav-icon">📋</span> 보고서 정보
+        </a>
+        <a class="nav-item" href="#sec-ledger">
+          <span class="nav-icon">📂</span> 원장 불러오기
+        </a>
+        <a class="nav-item" href="#sec-editor">
+          <span class="nav-icon">✏️</span> 보고서 작성
+        </a>
+        <a class="nav-item" href="#sec-export">
+          <span class="nav-icon">💾</span> 파일로 저장
+        </a>
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      © 2026 Synthera
+    </div>
+  </aside>
 
-<section>
-<h2>2. 일일 일지</h2>
-<p class="note">월간 판매 원장 Excel(주문일자·제품명·금액·주문내역·단가·매출처, 월별 시트가 여러 개여도 돼요)을 올리면 구분(연·분기·월·일자)과 기간(연도·분기·년월)을 고를 수 있어요. 골라서 Word·Excel·PowerPoint·한글용으로 저장해요.</p>
-<div class="dl"><button type="button" data-dl="ledger-12">샘플 엑셀 내려받기 (12개월 원장)</button></div>
-<label>월간 판매 원장 불러오기 (.xlsx)<input type="file" id="d-file" accept=".xlsx"></label>
-<p class="msg" id="d-m1" role="status"></p>
-</section>
-<section id="d-pick" hidden>
-<h2>구분 · 기간 선택</h2>
-<p class="note" id="d-sum"></p>
-<div class="row">
-<label style="max-width:160px">구분<select id="d-kind"><option value="year">연</option><option value="quarter">분기</option><option value="month" selected>월</option><option value="day">일자</option></select></label>
-<label id="d-ymw" style="max-width:220px">기간(년월)<select id="d-ym"></select></label>
-<label id="d-dayw" style="max-width:220px" hidden>일자<select id="d-day"></select></label>
-</div>
-<div class="tw" style="max-height:480px;overflow:auto"><table style="min-width:640px"><thead id="d-th"></thead><tbody id="d-tb"></tbody></table></div>
-<div id="d-cards" class="cards"></div>
-<h3 style="margin-top:18px">파일로 저장</h3>
-<div class="dl">
-<button class="p" id="d-dw" type="button">Word로 저장 (.docx)</button>
-<button class="p" id="d-dx" type="button">Excel로 저장 (.xlsx)</button>
-<button class="p" id="d-dp" type="button">PowerPoint로 저장 (.pptx)</button>
-<button class="p" id="d-dh" type="button">한글용으로 저장</button>
-</div>
-<p class="msg" id="d-m2" role="status"></p>
-<div class="row"><button id="d-clear" type="button">불러온 일지 모두 지우기</button></div>
-</section>
+  <!-- ── Main ── -->
+  <main class="main-content">
 
-<section id="ed">
-<h2>3. 보고서 작성 <span style="font-weight:400;color:var(--mute);font-size:14px">– 모든 칸을 직접 고칠 수 있어요</span></h2>
-<label>보고서 제목<input id="t"></label>
-<label>요약(개요)<textarea id="o"></textarea></label>
+    <!-- Top header -->
+    <header class="top-header">
+      <div>
+        <div class="top-title">판매실적 보고서 작성</div>
+        <div class="top-subtitle">내용을 입력하거나 Excel을 불러와 보고서를 완성하세요</div>
+      </div>
+      <div class="header-actions">
+        <button type="button" id="btn-load-file" style="font-size:13px">📁 파일 불러오기</button>
+        <input type="file" id="fi" accept=".xlsx,.docx,.pptx,.csv,.txt,.md" style="display:none">
+      </div>
+    </header>
 
-<h3>매출 추이 · 예상 <span style="font-weight:400;color:var(--mute);font-size:13px">(입력하면 지표·예상·그래프가 자동으로 만들어져요)</span></h3>
-<div class="row">
-<label>기간 단위<select id="punit"><option>분기</option><option>월</option><option>주</option><option>반기</option><option>연</option></select></label>
-<label>금액 단위 (표시용)<input id="unit" placeholder="예: 백만 원"></label>
-<label>예상 방법<select id="method"><option value="linear">선형 추세 (권장)</option><option value="growth">평균 증가율</option><option value="ma">최근 3기간 평균</option></select></label>
-</div>
-<p class="note">연간 예상 판매액은 올해 첫 기간부터 입력했다고 보고 계산해요. 예상값은 과거 추세만 보는 참고용이에요.</p>
-<div class="tw"><table><thead><tr><th>기간</th><th>목표</th><th>실적</th><th class="x"></th></tr></thead><tbody id="sr"></tbody></table></div>
-<button type="button" id="adds">+ 기간 추가</button>
-<div id="auto" class="cards"></div>
-<canvas id="cv" width="1000" height="420" style="display:none;width:100%;background:#fff;border:1px solid var(--line);border-radius:6px"></canvas>
+    <div class="content-body">
 
-<h3>핵심 실적 지표</h3>
-<div class="tw"><table><thead><tr><th>지표</th><th>수치</th><th>증감</th><th>비고</th><th class="x"></th></tr></thead><tbody id="kpis"></tbody></table></div>
-<button type="button" id="addk">+ 지표 추가</button>
+      <!-- ① 보고서 정보 -->
+      <div class="card" id="sec-info">
+        <div class="card-header">
+          <div class="card-icon">📋</div>
+          <div>
+            <div class="card-title">1. 보고서 정보</div>
+            <div class="card-subtitle">보고서의 기본 정보를 입력해 주세요</div>
+          </div>
+        </div>
+        <div class="row">
+          <label>회사 / 부서<input id="company" placeholder="예: 영업1팀"></label>
+          <label>보고 기간<input id="period" placeholder="예: 2026년 3분기"></label>
+          <label>작성자<input id="author" placeholder="이름을 입력하세요"></label>
+        </div>
+        <p class="msg" id="m1" role="status"></p>
+      </div>
 
-<h3>실적 상세 <span style="font-weight:400;color:var(--mute);font-size:13px">(제품·지역·채널·월별 등)</span></h3>
-<div class="tw"><table><thead id="bh"></thead><tbody id="bb"></tbody></table></div>
-<div class="row"><button type="button" id="addr">+ 행 추가</button><button type="button" id="addc">+ 열 추가</button></div>
+      <!-- ② 원장 불러오기 -->
+      <div class="card" id="sec-ledger">
+        <div class="card-header">
+          <div class="card-icon">📂</div>
+          <div>
+            <div class="card-title">2. 월간 판매 원장 불러오기</div>
+            <div class="card-subtitle">Excel 원장을 업로드하면 기간·구분별로 자동 분석합니다</div>
+          </div>
+        </div>
+        <p class="note">월간 판매 원장 Excel(주문일자·제품명·금액·주문내역·단가·매출처, 월별 시트가 여러 개여도 돼요)을 올리면 구분(연·분기·월·일자)과 기간을 고를 수 있어요.</p>
+        <div class="dl" style="margin-bottom:16px">
+          <button type="button" data-dl="ledger-12">⬇ 샘플 엑셀 내려받기 (12개월 원장)</button>
+        </div>
+        <div class="file-upload-area">
+          <div class="file-upload-icon">📊</div>
+          <div class="file-upload-label">월간 판매 원장 (.xlsx) 업로드</div>
+          <input type="file" id="d-file" accept=".xlsx">
+        </div>
+        <p class="msg" id="d-m1" role="status"></p>
+      </div>
 
-<h3>실적 분석</h3><div id="l-analysis"></div><button type="button" data-add="analysis">+ 항목 추가</button>
-<h3>이슈 및 리스크</h3><div id="l-issues"></div><button type="button" data-add="issues">+ 항목 추가</button>
-<h3>향후 계획 및 조치</h3><div id="l-plans"></div><button type="button" data-add="plans">+ 항목 추가</button>
+      <!-- 구분·기간 선택 (숨김 처리 → JS로 표시) -->
+      <div class="card" id="d-pick" hidden>
+        <div class="card-header">
+          <div class="card-icon">🗂</div>
+          <div>
+            <div class="card-title">구분 · 기간 선택</div>
+            <div class="card-subtitle">원하는 기간과 구분을 선택하세요</div>
+          </div>
+        </div>
+        <p class="d-sum-bar" id="d-sum"></p>
+        <div class="row" style="margin-bottom:14px">
+          <label style="max-width:160px">구분
+            <select id="d-kind">
+              <option value="year">연</option>
+              <option value="quarter">분기</option>
+              <option value="month" selected>월</option>
+              <option value="day">일자</option>
+            </select>
+          </label>
+          <label id="d-ymw" style="max-width:220px">기간(년월)<select id="d-ym"></select></label>
+          <label id="d-dayw" style="max-width:220px" hidden>일자<select id="d-day"></select></label>
+        </div>
+        <div class="tw" style="max-height:420px;overflow:auto">
+          <table style="min-width:640px"><thead id="d-th"></thead><tbody id="d-tb"></tbody></table>
+        </div>
+        <div id="d-cards" class="cards"></div>
+        <div class="divider"></div>
+        <h3 class="subhead">파일로 저장</h3>
+        <div class="dl">
+          <button class="p" id="d-dw" type="button">📄 Word (.docx)</button>
+          <button class="p" id="d-dx" type="button">📊 Excel (.xlsx)</button>
+          <button class="p" id="d-dp" type="button">📑 PowerPoint (.pptx)</button>
+          <button class="p" id="d-dh" type="button">📝 한글용 저장</button>
+        </div>
+        <p class="msg" id="d-m2" role="status"></p>
+        <div style="margin-top:12px">
+          <button id="d-clear" type="button">🗑 불러온 일지 모두 지우기</button>
+        </div>
+      </div>
 
-<h2 style="margin-top:28px">4. 파일로 저장</h2>
-<p class="note">보고용 문서는 Word·한글용, 숫자·표는 Excel, 발표는 PowerPoint로 저장하세요. 그래프는 Word·Excel·PowerPoint 파일에 그림으로 들어가요. 저장 기능은 인터넷 연결이 필요해요.</p>
-<div class="dl">
-<button class="p" id="dw" type="button">Word로 저장 (.docx)</button>
-<button class="p" id="dx" type="button">Excel로 저장 (.xlsx)</button>
-<button class="p" id="dp" type="button">PowerPoint로 저장 (.pptx)</button>
-<button class="p" id="dh" type="button">한글용으로 저장</button>
-</div>
-<p class="msg" id="m2" role="status"></p>
-</section>
-<p class="note">저장하기 전에 숫자와 내용을 한 번 더 확인해 주세요.</p>
-</div>
+      <!-- ③ 보고서 작성 -->
+      <div class="card" id="sec-editor" style="margin-bottom:0">
+        <div class="card-header">
+          <div class="card-icon">✏️</div>
+          <div>
+            <div class="card-title">3. 보고서 작성</div>
+            <div class="card-subtitle">모든 칸을 직접 수정할 수 있어요</div>
+          </div>
+        </div>
+
+        <!-- 기본 정보 -->
+        <div id="ed">
+          <label>보고서 제목<input id="t" placeholder="예: 2026년 3분기 판매실적 보고서"></label>
+          <label>요약 (개요)<textarea id="o" placeholder="보고서 개요를 입력하세요…"></textarea></label>
+
+          <!-- 매출 추이 -->
+          <h3 class="subhead">📈 매출 추이 · 예상</h3>
+          <p class="info-text">기간별 목표·실적을 입력하면 지표·예상·그래프가 자동으로 만들어져요.</p>
+          <div class="row" style="margin:12px 0">
+            <label>기간 단위
+              <select id="punit">
+                <option>분기</option><option>월</option><option>주</option><option>반기</option><option>연</option>
+              </select>
+            </label>
+            <label>금액 단위 (표시용)<input id="unit" placeholder="예: 백만 원"></label>
+            <label>예상 방법
+              <select id="method">
+                <option value="linear">선형 추세 (권장)</option>
+                <option value="growth">평균 증가율</option>
+                <option value="ma">최근 3기간 평균</option>
+              </select>
+            </label>
+          </div>
+          <p class="note">연간 예상 판매액은 올해 첫 기간부터 계산해요. 예상값은 참고용이에요.</p>
+          <div class="tw">
+            <table>
+              <thead><tr><th>기간</th><th>목표</th><th>실적</th><th class="x"></th></tr></thead>
+              <tbody id="sr"></tbody>
+            </table>
+          </div>
+          <button type="button" id="adds" style="margin-bottom:10px">＋ 기간 추가</button>
+          <div id="auto" class="cards"></div>
+          <canvas id="cv" width="1000" height="420"></canvas>
+
+          <!-- 핵심 실적 지표 -->
+          <h3 class="subhead" style="margin-top:24px">🎯 핵심 실적 지표</h3>
+          <div class="tw">
+            <table>
+              <thead><tr><th>지표</th><th>수치</th><th>증감</th><th>비고</th><th class="x"></th></tr></thead>
+              <tbody id="kpis"></tbody>
+            </table>
+          </div>
+          <button type="button" id="addk">＋ 지표 추가</button>
+
+          <!-- 실적 상세 -->
+          <h3 class="subhead" style="margin-top:24px">📊 실적 상세</h3>
+          <p class="info-text">제품·지역·채널·월별 등 원하는 구성으로 표를 만들어요.</p>
+          <div class="tw">
+            <table><thead id="bh"></thead><tbody id="bb"></tbody></table>
+          </div>
+          <div class="row" style="margin-bottom:14px">
+            <button type="button" id="addr">＋ 행 추가</button>
+            <button type="button" id="addc">＋ 열 추가</button>
+          </div>
+
+          <!-- 분석·이슈·계획 -->
+          <h3 class="subhead">📝 실적 분석</h3>
+          <div id="l-analysis"></div>
+          <button type="button" data-add="analysis">＋ 항목 추가</button>
+
+          <h3 class="subhead" style="margin-top:20px">⚠️ 이슈 및 리스크</h3>
+          <div id="l-issues"></div>
+          <button type="button" data-add="issues">＋ 항목 추가</button>
+
+          <h3 class="subhead" style="margin-top:20px">📌 향후 계획 및 조치</h3>
+          <div id="l-plans"></div>
+          <button type="button" data-add="plans">＋ 항목 추가</button>
+        </div>
+      </div>
+
+      <!-- ④ 파일로 저장 -->
+      <div class="card" id="sec-export" style="margin-top:20px">
+        <div class="card-header">
+          <div class="card-icon">💾</div>
+          <div>
+            <div class="card-title">4. 파일로 저장</div>
+            <div class="card-subtitle">완성된 보고서를 원하는 형식으로 저장하세요</div>
+          </div>
+        </div>
+        <p class="note">보고용 문서는 Word·한글용, 숫자·표는 Excel, 발표는 PowerPoint로 저장하세요. 그래프는 파일에 그림으로 포함돼요. 저장 기능은 인터넷 연결이 필요해요.</p>
+        <div class="dl">
+          <button class="p" id="dw" type="button">📄 Word로 저장 (.docx)</button>
+          <button class="p" id="dx" type="button">📊 Excel로 저장 (.xlsx)</button>
+          <button class="p" id="dp" type="button">📑 PowerPoint로 저장 (.pptx)</button>
+          <button class="p" id="dh" type="button">📝 한글용으로 저장</button>
+        </div>
+        <p class="msg" id="m2" role="status"></p>
+        <p class="info-text" style="margin-top:12px">💡 저장하기 전에 숫자와 내용을 한 번 더 확인해 주세요.</p>
+      </div>
+
+    </div><!-- /content-body -->
+  </main><!-- /main-content -->
+</div><!-- /app-shell -->
+
+<script>
+/* ── 사이드바 네비 하이라이트 ── */
+(function(){
+  const items = document.querySelectorAll('.sidebar .nav-item');
+  const sections = ['sec-info','sec-ledger','d-pick','sec-editor','sec-export'];
+  function update(){
+    const scrollY = window.scrollY + 100;
+    let cur = sections[0];
+    sections.forEach(function(id){
+      const el = document.getElementById(id);
+      if(el && !el.hidden && el.getBoundingClientRect().top + window.scrollY <= scrollY) cur = id;
+    });
+    items.forEach(function(a){
+      const href = a.getAttribute('href');
+      const target = href ? href.replace('#','') : '';
+      a.classList.toggle('active', target === cur || (cur==='d-pick' && target==='sec-ledger'));
+    });
+  }
+  window.addEventListener('scroll', update, {passive:true});
+  items.forEach(function(a){
+    a.addEventListener('click', function(e){
+      e.preventDefault();
+      const id = a.getAttribute('href').replace('#','');
+      const el = document.getElementById(id);
+      if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
+    });
+  });
+
+  /* 파일 불러오기 버튼 */
+  document.getElementById('btn-load-file').onclick = function(){
+    document.getElementById('fi').click();
+  };
+})();
+</script>
+
 
 <script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
